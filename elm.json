@@ -1,6 +1,6 @@
 {
     "type": "package",
-    "name": "calions-app/app-object",
+    "name": "FabienHenon/app-object",
     "summary": "Add model and cmd scoped to your entire application",
     "license": "MIT",
     "version": "1.0.0",
