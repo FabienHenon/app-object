@@ -1,6 +1,6 @@
 module AppObject exposing
     ( AppObject
-    , init, batchCmd, batchAppCmd
+    , init, batchCmd, batchAppCmd, batchCmdWithModel, batchAppCmdWithModel
     , map, mapAppData, mapAppMsg, mapModel, mapMsg
     , merge, foldl, andThen
     , run
@@ -30,7 +30,7 @@ This is what `AppObject` is for, it allows you to:
 
 # Init
 
-@docs init, batchCmd, batchAppCmd
+@docs init, batchCmd, batchAppCmd, batchCmdWithModel, batchAppCmdWithModel
 
 
 # Mappers
@@ -115,6 +115,28 @@ batchCmd cmd (AppObject ao) =
 
     else
         AppObject { ao | cmd = Cmd.batch [ ao.cmd, cmd ] }
+
+
+{-| Adds a new global command to this `AppObject`. The model is passed as parameter
+-}
+batchAppCmdWithModel : (model -> Cmd appMsg) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
+batchAppCmdWithModel appCmd (AppObject ao) =
+    if appCmd == Cmd.none then
+        AppObject ao
+
+    else
+        AppObject { ao | appCmd = Cmd.batch [ ao.appCmd, appCmd ao.model ] }
+
+
+{-| Adds a new component's command to this `AppObject`? The model is passed as parameter
+-}
+batchCmdWithModel : (model -> Cmd msg) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
+batchCmdWithModel cmd (AppObject ao) =
+    if cmd == Cmd.none then
+        AppObject ao
+
+    else
+        AppObject { ao | cmd = Cmd.batch [ ao.cmd, cmd ao.model ] }
 
 
 {-| Maps your `AppObject` to change the types of `appData`, `appMsg`, `model` and `msg`
