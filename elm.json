@@ -3,7 +3,7 @@
     "name": "FabienHenon/app-object",
     "summary": "Add model and cmd scoped to your entire application",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "exposed-modules": [
         "AppObject"
     ],
