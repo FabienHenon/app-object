@@ -121,22 +121,30 @@ batchCmd cmd (AppObject ao) =
 -}
 batchAppCmdWithModel : (model -> Cmd appMsg) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
 batchAppCmdWithModel appCmd (AppObject ao) =
-    if appCmd == Cmd.none then
+    let
+        finalCmd =
+            appCmd ao.model
+    in
+    if finalCmd == Cmd.none then
         AppObject ao
 
     else
-        AppObject { ao | appCmd = Cmd.batch [ ao.appCmd, appCmd ao.model ] }
+        AppObject { ao | appCmd = Cmd.batch [ ao.appCmd, finalCmd ] }
 
 
 {-| Adds a new component's command to this `AppObject`? The model is passed as parameter
 -}
 batchCmdWithModel : (model -> Cmd msg) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
 batchCmdWithModel cmd (AppObject ao) =
-    if cmd == Cmd.none then
+    let
+        finalCmd =
+            cmd ao.model
+    in
+    if finalCmd == Cmd.none then
         AppObject ao
 
     else
-        AppObject { ao | cmd = Cmd.batch [ ao.cmd, cmd ao.model ] }
+        AppObject { ao | cmd = Cmd.batch [ ao.cmd, finalCmd ] }
 
 
 {-| Maps your `AppObject` to change the types of `appData`, `appMsg`, `model` and `msg`
