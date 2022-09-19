@@ -119,32 +119,32 @@ batchCmd cmd (AppObject ao) =
 
 {-| Adds a new global command to this `AppObject`. The model is passed as parameter
 -}
-batchAppCmdWithModel : (model -> Cmd appMsg) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
+batchAppCmdWithModel : (model -> ( model, Cmd appMsg )) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
 batchAppCmdWithModel appCmd (AppObject ao) =
     let
-        finalCmd =
+        ( newModel, finalCmd ) =
             appCmd ao.model
     in
     if finalCmd == Cmd.none then
-        AppObject ao
+        AppObject { ao | model = newModel }
 
     else
-        AppObject { ao | appCmd = Cmd.batch [ ao.appCmd, finalCmd ] }
+        AppObject { ao | appCmd = Cmd.batch [ ao.appCmd, finalCmd ], model = newModel }
 
 
 {-| Adds a new component's command to this `AppObject`? The model is passed as parameter
 -}
-batchCmdWithModel : (model -> Cmd msg) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
+batchCmdWithModel : (model -> ( model, Cmd msg )) -> AppObject appData appMsg model msg -> AppObject appData appMsg model msg
 batchCmdWithModel cmd (AppObject ao) =
     let
-        finalCmd =
+        ( newModel, finalCmd ) =
             cmd ao.model
     in
     if finalCmd == Cmd.none then
-        AppObject ao
+        AppObject { ao | model = newModel }
 
     else
-        AppObject { ao | cmd = Cmd.batch [ ao.cmd, finalCmd ] }
+        AppObject { ao | cmd = Cmd.batch [ ao.cmd, finalCmd ], model = newModel }
 
 
 {-| Maps your `AppObject` to change the types of `appData`, `appMsg`, `model` and `msg`
